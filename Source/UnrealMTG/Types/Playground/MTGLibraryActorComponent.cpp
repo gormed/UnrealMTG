@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "MTGLibraryActorComponent.h"
 
 // Sets default values for this component's properties
@@ -30,5 +29,16 @@ void UMTGLibraryActorComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+ACard* UMTGLibraryActorComponent::DrawCard(AMTGPlayerCharacter* character)
+{
+	if (OwningCharacter == character)
+	{
+		ACard* topCard = Cards.Top();
+		Cards.Remove(topCard);
+		return topCard;
+	}
+	return NULL;
 }
 

@@ -26,4 +26,31 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	/// Library Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Library")
+	class UMTGLibraryActorComponent* Library;
+
+	/// Stack Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Stack")
+	class UMTGStackActorComponent* Stack;
+
+	/// Hand Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Hand")
+	class UMTGHandActorComponent* Hand;
+
+	/// Graveyard Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Graveyard")
+	class UMTGGraveyardActorComponent* Graveyard;
+
+	/// Exile Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Exile")
+	class UMTGExileActorComponent* Exile;
+
+	/// Command Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Command")
+	class UMTGCommadActorComponent* Command;
+
+	/// Battlefield Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Battlefield")
+	class UMTGBattlefieldActorComponent* Battlefield;
 };
