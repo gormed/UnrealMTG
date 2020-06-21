@@ -1,3 +1,5 @@
+#pragma once
+
 UENUM(BlueprintType, Category = "Stack Side")
 namespace EStackSide
 {

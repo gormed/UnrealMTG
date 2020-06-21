@@ -2,11 +2,13 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "../../UnrealMTG.h"
 #include "../FMoveAction.h"
 #include "Components/ActorComponent.h"
 #include "AbstractPlaygroundActorComponent.generated.h"
 
+class ACard;
+class AMTGPlayerCharacter;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALMTG_API UAbstractPlaygroundActorComponent : public UActorComponent
@@ -31,15 +33,15 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "MTG")
-	class AMTGPlayerCharacter* OwningCharacter;
+	AMTGPlayerCharacter* OwningCharacter;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG")
-	TArray<class ACard*> Cards;
+	TSet<ACard*> Cards;
 
 	UFUNCTION(BlueprintCallable, Category = "MTG|Action", meta = (DisplayName = "Move Cards"))
 	bool MoveCards(
-		class UAbstractPlaygroundActorComponent* source,
-		TArray<class ACard*> cards,
+		UAbstractPlaygroundActorComponent* source,
+		TSet<ACard*> moveCards,
 		FMoveAction action
 	);
 };

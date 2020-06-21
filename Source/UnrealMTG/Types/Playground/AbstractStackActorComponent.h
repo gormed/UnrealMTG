@@ -3,10 +3,13 @@
 #pragma once
 
 #include "../../UnrealMTG.h"
-#include "EStackSide.h"
+#include "../EStackSide.h"
 #include "AbstractPlaygroundActorComponent.h"
 #include "Components/ActorComponent.h"
 #include "AbstractStackActorComponent.generated.h"
+
+class ACard;
+class AMTGPlayerCharacter;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALMTG_API UAbstractStackActorComponent : public UAbstractPlaygroundActorComponent
@@ -26,15 +29,15 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = "MTG|Action", meta = (DisplayName = "View Cards"))
-	TArray<class ACard*> ViewCards(class AMTGPlayerCharacter* character, int32 count, TEnumAsByte<EStackSide::Type> side);
+	TSet<ACard*> ViewCards(AMTGPlayerCharacter* character, int32 count, TEnumAsByte<EStackSide::Type> side);
 
 	UFUNCTION(BlueprintCallable, Category = "MTG|Action", meta = (DisplayName = "Draw Cards"))
-	TArray<class ACard*> DrawCards(class AMTGPlayerCharacter* character, int32 count, TEnumAsByte<EStackSide::Type> side);
+	TSet<ACard*> DrawCards(AMTGPlayerCharacter* character, int32 count, TEnumAsByte<EStackSide::Type> side);
 
 	UFUNCTION(BlueprintCallable, Category = "MTG|Action", meta = (DisplayName = "Put Cards Into Library"))
 	bool PutCards(
-		class UAbstractPlaygroundActorComponent* source,
-		const TArray<class ACard*>& putCards,
+		UAbstractPlaygroundActorComponent* source,
+		const TSet<ACard*>& putCards,
 		TEnumAsByte<EStackSide::Type> side
 	);
 };

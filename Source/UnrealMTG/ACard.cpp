@@ -15,7 +15,6 @@ ACard::ACard()
 	PrimaryActorTick.bCanEverTick = true;
 
 	this->ObjectType = ECardObjectType::Type::Card;
-	this->CardCache = TArray<FString>();
 }
 
 void ACard::InitCard(const FString& CardId)

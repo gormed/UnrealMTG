@@ -1,6 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "MTGBattlefieldActorComponent.h"
+#include "MTGCommadActorComponent.h"
+#include "MTGExileActorComponent.h"
+#include "MTGGraveyardActorComponent.h"
+#include "MTGHandActorComponent.h"
+#include "MTGLibraryActorComponent.h"
+#include "MTGStackActorComponent.h"
+
 #include "AbstractPlaygroundActorComponent.h"
 
 // Sets default values for this component's properties
@@ -36,18 +44,6 @@ template<class T>
 bool UAbstractPlaygroundActorComponent::CheckPlaygroundComponent(
 	T*& outType
 ) {
-	if (component == NULL)
-	{
-		UE_LOG(LogMTGAction, Error, TEXT("The component to check is NULL!"));
-		outType = NULL;
-		return false;
-	}
-	if (playgroundClass == NULL)
-	{
-		UE_LOG(LogMTGAction, Error, TEXT("The playground class to compare is invalid!"));
-		outType = NULL;
-		return false;
-	}
 	T* playgoundType = Cast<T>(this);
 	if (playgoundType == NULL)
 	{
@@ -61,7 +57,7 @@ bool UAbstractPlaygroundActorComponent::CheckPlaygroundComponent(
 
 bool UAbstractPlaygroundActorComponent::MoveCards(
 	UAbstractPlaygroundActorComponent* source,
-	TArray<ACard*> cards,
+	TSet<ACard*> moveCards,
 	FMoveAction action
 ) {
 	// return false for a invalid source!
@@ -70,10 +66,10 @@ bool UAbstractPlaygroundActorComponent::MoveCards(
 		UE_LOG(LogMTGAction, Error, TEXT("Invalid source, make sure it is not NULL (%s)!"), *GetName());
 		return false;
 	}
-	// return false for a invalid cards!
-	if (cards.Num() == 0)
+	// return false for a invalid moveCards!
+	if (moveCards.Num() == 0)
 	{
-		UE_LOG(LogMTGAction, Error, TEXT("No cards given to move (%s)!"), *GetName());
+		UE_LOG(LogMTGAction, Error, TEXT("No moveCards given to move (%s)!"), *GetName());
 		return false;
 	}
 	if (source->OwningCharacter == OwningCharacter) {
@@ -86,25 +82,26 @@ bool UAbstractPlaygroundActorComponent::MoveCards(
 		UMTGStackActorComponent* stack;
 
 		if (source->CheckPlaygroundComponent<UMTGBattlefieldActorComponent>(battlefield)) {
-			return battlefield->CastCards(cards, action.CardFace);
+			return battlefield->CastCards(this, moveCards, action.CardFace);
 		}
 		if (source->CheckPlaygroundComponent<UMTGCommadActorComponent>(command)) {
-			return command->CastCards(this, cards, action.CardFace);
+			return command->CastCards(this, moveCards, action.CardFace);
 		}
 		if (source->CheckPlaygroundComponent<UMTGExileActorComponent>(exile)) {
-			return exile->PutCards(this, cards, action.StackSide);
+			return exile->PutCards(this, moveCards, action.StackSide);
 		}
 		if (source->CheckPlaygroundComponent<UMTGGraveyardActorComponent>(graveyard)) {
-			return graveyard->PutCards(this, cards, action.StackSide);
+			return graveyard->PutCards(this, moveCards, action.StackSide);
 		}
 		if (source->CheckPlaygroundComponent<UMTGLibraryActorComponent>(library)) {
-			return library->PutCards(this, cards, action.StackSide);
+			return library->PutCards(this, moveCards, action.StackSide);
 		}
 		if (source->CheckPlaygroundComponent<UMTGHandActorComponent>(hand)) {
-
+			
 		}
 		if (source->CheckPlaygroundComponent<UMTGStackActorComponent>(stack)) {
-
+			
 		}
 	}
+	return false;
 }

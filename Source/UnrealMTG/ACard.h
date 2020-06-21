@@ -14,7 +14,7 @@
 #include "Types/ECardColorFragment.h"
 #include "Types/ECardObjectType.h"
 #include "Types/ECardLayoutType.h"
-#include "Types/ECardState.h"
+#include "Types/ECardTapState.h"
 
 #include "Types/FCardTypeDef.h"
 #include "Types/FCardManaCost.h"
@@ -99,7 +99,7 @@ public:
 
 	/// The cards action keywords
 	UPROPERTY(BlueprintReadOnly, Category = "Card")
-	TArray<TEnumAsByte<EActionKeywords::Type>> ActionKeywords;
+	TArray<TEnumAsByte<EActionKeyword::Type>> ActionKeywords;
 
 	/// The cards parts if any
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")

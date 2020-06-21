@@ -32,12 +32,12 @@ void UAbstractStackActorComponent::TickComponent(float DeltaTime, ELevelTick Tic
 	// ...
 }
 
-TArray<ACard*> UAbstractStackActorComponent::ViewCards(
+TSet<ACard*> UAbstractStackActorComponent::ViewCards(
 	AMTGPlayerCharacter* character,
 	int32 count = 1,
 	TEnumAsByte<EStackSide::Type> side = EStackSide::Type::Top)
 {
-	TArray<ACard*> show;
+	TSet<ACard*> show;
 	// return false for a invalid character!
 	if (character == NULL)
 	{
@@ -53,15 +53,17 @@ TArray<ACard*> UAbstractStackActorComponent::ViewCards(
 	{
 		switch (side) {
 			case EStackSide::Type::Top:
-				for (int32 Index = 0; Index != Cards.Num(); ++Index)
+				for (auto It = Cards.CreateConstIterator(); It; ++It)
 				{
-					show.Emplace(Cards[Index]);
+					ACard* card = *It;
+					show.Emplace(card);
 				}
 				return show;
 			case EStackSide::Type::Bottom:
-				for (int32 Index = Cards.Num(); Index != -1; --Index)
+				for (auto It = Cards.CreateConstIterator(); It; ++It)
 				{
-					show.Emplace(Cards[Index]);
+					ACard* card = *It;
+					show.Emplace(card);
 				}
 				return show;
 			default:
@@ -72,12 +74,12 @@ TArray<ACard*> UAbstractStackActorComponent::ViewCards(
 	return show;
 }
 
-TArray<ACard*> UAbstractStackActorComponent::DrawCards(
+TSet<ACard*> UAbstractStackActorComponent::DrawCards(
 	AMTGPlayerCharacter* character,
 	int32 count = 1,
 	TEnumAsByte<EStackSide::Type> side = EStackSide::Type::Top)
 {
-	TArray<ACard*> draw;
+	TSet<ACard*> draw;
 	// return false for a invalid character!
 	if (character == NULL)
 	{
@@ -93,17 +95,19 @@ TArray<ACard*> UAbstractStackActorComponent::DrawCards(
 	{
 		switch (side) {
 		case EStackSide::Type::Top:
-			for (int32 Index = 0; Index != Cards.Num(); ++Index)
+			for (auto It = Cards.CreateConstIterator(); It; ++It)
 			{
-				draw.Emplace(Cards[Index]);
-				Cards.RemoveAt(Index);
+				ACard* card = *It;
+				draw.Emplace(card);
+				Cards.Remove(card);
 			}
 			return draw;
 		case EStackSide::Type::Bottom:
-			for (int32 Index = Cards.Num(); Index != -1; --Index)
+			for (auto It = Cards.CreateConstIterator(); It; ++It)
 			{
-				draw.Emplace(Cards[Index]);
-				Cards.RemoveAt(Index);
+				ACard* card = *It;
+				draw.Emplace(card);
+				Cards.Remove(card);
 			}
 			return draw;
 		default:
@@ -116,7 +120,7 @@ TArray<ACard*> UAbstractStackActorComponent::DrawCards(
 
 bool UAbstractStackActorComponent::PutCards(
 	UAbstractPlaygroundActorComponent* source,
-	const TArray<ACard*>& putCards,
+	const TSet<ACard*>& putCards,
 	TEnumAsByte<EStackSide::Type> side = EStackSide::Type::Top)
 {	
 	// return false for a invalid source!
@@ -135,15 +139,17 @@ bool UAbstractStackActorComponent::PutCards(
 	{
 		switch (side) {
 		case EStackSide::Type::Top:
-			for (int32 Index = 0; Index != putCards.Num(); ++Index)
+			for (auto It = putCards.CreateConstIterator(); It; ++It)
 			{
-				Cards.Emplace(putCards[Index]);
+				ACard* card = *It;
+				Cards.Emplace(card);
 			}
 			return true;
 		case EStackSide::Type::Bottom:
-			for (int32 Index = 0; Index != putCards.Num(); ++Index)
+			for (auto It = putCards.CreateConstIterator(); It; ++It)
 			{
-				Cards.Emplace(putCards[Index]);
+				ACard* card = *It;
+				Cards.Emplace(card);
 			}
 			return true;
 		default:

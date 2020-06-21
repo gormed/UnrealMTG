@@ -2,11 +2,12 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "../../UnrealMTG.h"
 #include "AbstractPlaygroundActorComponent.h"
 #include "Components/ActorComponent.h"
 #include "MTGStackActorComponent.generated.h"
 
+class ACard;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALMTG_API UMTGStackActorComponent : public UAbstractPlaygroundActorComponent
@@ -27,8 +28,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MTG|Action", meta = (DisplayName = "Cast Cards"))
 	bool CastCards(
-		class UAbstractPlaygroundActorComponent* source,
-		TArray<class ACard*> cards,
+		UAbstractPlaygroundActorComponent* source,
+		TSet<ACard*> castCards,
 		TEnumAsByte<ECardFace::Type> face
 	);
 };
