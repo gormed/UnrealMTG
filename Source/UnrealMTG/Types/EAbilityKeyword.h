@@ -5,6 +5,7 @@ namespace EAbilityKeyword
 {
 	enum Type
 	{
+		None UMETA(DisplayName = "None"),
 		LivingWeapon UMETA(DisplayName = "Living weapon"),
 		JumpStart UMETA(DisplayName = "Jump-start"),
 		BasicLandcycling UMETA(DisplayName = "Basic landcycling"),

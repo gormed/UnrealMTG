@@ -8,10 +8,13 @@
 //HTTP
 #include "Http.h"
 
+#include "Types/EAbilityKeyword.h"
+#include "Types/EActionKeyword.h"
 #include "Types/ECardObjectType.h"
 #include "Types/ECardColorFragment.h"
 #include "Types/ECardObjectType.h"
 #include "Types/ECardLayoutType.h"
+#include "Types/ECardState.h"
 
 #include "Types/FCardTypeDef.h"
 #include "Types/FCardManaCost.h"
@@ -85,6 +88,18 @@ public:
 	/// The card type as a struct
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
 	FCardTypeDef Type;
+	
+	/// The cards tap state
+	UPROPERTY(BlueprintReadOnly, Category = "Card")
+	TEnumAsByte<ECardTapState::Type> TapState;
+
+	/// The cards ability keywords
+	UPROPERTY(BlueprintReadOnly, Category = "Card")
+	TArray<TEnumAsByte<EAbilityKeyword::Type>> AbilityKeywords;
+
+	/// The cards action keywords
+	UPROPERTY(BlueprintReadOnly, Category = "Card")
+	TArray<TEnumAsByte<EActionKeywords::Type>> ActionKeywords;
 
 	/// The cards parts if any
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")

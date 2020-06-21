@@ -1,10 +1,11 @@
 #pragma once
 
 UENUM(BlueprintType, Category = "Ability Words")
-namespace EAbilityWords
+namespace EAbilityWord
 {
 	enum Type
 	{
+		None UMETA(DisplayName = "None"),
 		Battalion UMETA(DisplayName = "Battalion"),
 		Bloodrush UMETA(DisplayName = "Bloodrush"),
 		Channel UMETA(DisplayName = "Channel"),

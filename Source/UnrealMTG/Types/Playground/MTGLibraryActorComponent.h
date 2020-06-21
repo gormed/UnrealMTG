@@ -3,14 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbstractStackActorComponent.h"
 #include "Components/ActorComponent.h"
 #include "MTGLibraryActorComponent.generated.h"
 
-class ACard;
-class AMTGPlayerCharacter;
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class UNREALMTG_API UMTGLibraryActorComponent : public UActorComponent
+class UNREALMTG_API UMTGLibraryActorComponent : public UAbstractStackActorComponent
 {
 	GENERATED_BODY()
 
@@ -25,13 +23,4 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG Library")
-	TArray<ACard*> Cards;
-	
-	UFUNCTION(BlueprintCallable, Category = "MTG Library", meta = (DisplayName = "Draw A Card"))
-	ACard* DrawCard(AMTGPlayerCharacter* character);
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "MTG Library")
-	AMTGPlayerCharacter* OwningCharacter;
 };

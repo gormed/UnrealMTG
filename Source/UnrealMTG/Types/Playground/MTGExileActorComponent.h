@@ -3,12 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbstractStackActorComponent.h"
 #include "Components/ActorComponent.h"
 #include "MTGExileActorComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class UNREALMTG_API UMTGExileActorComponent : public UActorComponent
+class UNREALMTG_API UMTGExileActorComponent : public UAbstractStackActorComponent
 {
 	GENERATED_BODY()
 
@@ -23,6 +24,4 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
 };

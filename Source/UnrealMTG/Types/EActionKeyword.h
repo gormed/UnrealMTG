@@ -5,6 +5,7 @@ namespace EActionKeyword
 {
 	enum Type
 	{
+		None UMETA(DisplayName = "None"),
 		Meld UMETA(DisplayName = "Meld"),
 		Bolster UMETA(DisplayName = "Bolster"),
 		Clash UMETA(DisplayName = "Clash"),

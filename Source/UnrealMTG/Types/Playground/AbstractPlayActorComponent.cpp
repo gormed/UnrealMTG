@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "MTGLibraryActorComponent.h"
+
+#include "AbstractPlayActorComponent.h"
 
 // Sets default values for this component's properties
-UMTGLibraryActorComponent::UMTGLibraryActorComponent()
+UAbstractPlayActorComponent::UAbstractPlayActorComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -14,7 +15,7 @@ UMTGLibraryActorComponent::UMTGLibraryActorComponent()
 
 
 // Called when the game starts
-void UMTGLibraryActorComponent::BeginPlay()
+void UAbstractPlayActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -24,10 +25,17 @@ void UMTGLibraryActorComponent::BeginPlay()
 
 
 // Called every frame
-void UMTGLibraryActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UAbstractPlayActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }
 
+bool UAbstractPlayActorComponent::CastCards(
+	class UAbstractPlaygroundActorComponent* source,
+	TArray<class ACard*> cards,
+	TEnumAsByte<ECardFace::Type> face
+) {
+
+}

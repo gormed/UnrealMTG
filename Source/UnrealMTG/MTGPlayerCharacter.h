@@ -2,18 +2,14 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "UnrealMTG.h"
 #include "GameFramework/Character.h"
 #include "MTGPlayerCharacter.generated.h"
 
 UCLASS()
 class UNREALMTG_API AMTGPlayerCharacter : public ACharacter
 {
-	GENERATED_BODY()
-
-public:
-	// Sets default values for this character's properties
-	AMTGPlayerCharacter();
+	GENERATED_UCLASS_BODY()
 
 protected:
 	// Called when the game starts or when spawned

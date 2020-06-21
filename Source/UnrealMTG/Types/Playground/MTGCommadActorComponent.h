@@ -3,12 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbstractPlaygroundActorComponent.h"
 #include "Components/ActorComponent.h"
 #include "MTGCommadActorComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class UNREALMTG_API UMTGCommadActorComponent : public UActorComponent
+class UNREALMTG_API UMTGCommadActorComponent : public UAbstractPlaygroundActorComponent
 {
 	GENERATED_BODY()
 
@@ -23,6 +24,4 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
 };
