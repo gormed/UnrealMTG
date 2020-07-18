@@ -4,9 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-
-//HTTP
 #include "Http.h"
+#include "IImageWrapperModule.h"
 
 #include "Types/EAbilityKeyword.h"
 #include "Types/EActionKeyword.h"
@@ -15,6 +14,7 @@
 #include "Types/ECardObjectType.h"
 #include "Types/ECardLayoutType.h"
 #include "Types/ECardTapState.h"
+#include "Types/ECardSide.h"
 
 #include "Types/FCardTypeDef.h"
 #include "Types/FCardManaCost.h"
@@ -23,6 +23,9 @@
 #include "Types/FCardCounter.h"
 
 #include "ACard.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCardIntitialized);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCardTextureFetched, TEnumAsByte<ECardSide::Type>, CardSide, UTexture2D*, Texture);
 
 UCLASS()
 class UNREALMTG_API ACard : public AActor
@@ -45,11 +48,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Card", meta = (DisplayName = "Init Card"))
 	void InitCard(const FString& CardId);
 
+	UPROPERTY(BlueprintAssignable, Category = "Card")
+	FCardIntitialized OnCardIntialized;
+
 	/// Implement this event in Blueprints
 	// UFUNCTION(BlueprintImplementableEvent, Category = "Victory PC", meta = (DisplayName = "Card Data Received"))
 	// void CardDataReceived(const FString& JSON);
-
-	void HTTPOnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	/// Scryfall object: 'card'
 	UPROPERTY(BlueprintReadOnly, Category = "Card")
@@ -113,11 +117,11 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
 	FString OracleText;
 
-	// The cards power if it is a creature
+	/// The cards power if it is a creature
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
 	int32 Power;
 
-	// The cards toughness if it is a creature
+	/// The cards toughness if it is a creature
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
 	int32 Toughness;
 
@@ -128,25 +132,56 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
 	ACharacter* OwningPlayer;
 
+	/// Indicate the tapped state
+	UPROPERTY(BlueprintReadOnly, Category = "Card")
+	bool bTapped;
+
+	UFUNCTION(BlueprintCallable, Category = "Card", meta = (DisplayName = "Tap / Untap"))
+	void SetTapped(const bool NewTapped);
+
+	UFUNCTION(BlueprintCallable, Category = "Card", meta = (DisplayName = "Fetch Card Image"))
+	bool FetchCardTexture(const FString& URL, const TEnumAsByte<ECardSide::Type> CardSide);
+
+	UPROPERTY(BlueprintAssignable, Category = "Card")
+	FCardTextureFetched OnCardTextureFetched;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Card")
+	UTexture2D* FrontSideTexture;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Card")
+	UTexture2D* BackSideTexture;
+
 private:
+
 
 	TArray<FString> CardCache;
 
 	bool FetchCard(const FString& id);
+	void HTTPOnResponse_FetchCard(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
-	bool NotCached(const FString& id);
+	void HTTPOnResponse_FetchCardImage(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	FString FetchCardImageUri;
+	TEnumAsByte<ECardSide::Type> FetchCardSide;
+
+	bool CardDataNotCached(const FString& id);
 	
-	bool CachedFileExists(const FString& id);
+	bool CachedCardDataFileExists(const FString& id);
+	bool CachedCardImageFileExists(const FString& id, TEnumAsByte<ECardSide::Type> CardSide);
 
 	FString CachedFilePath(const FString& id);
+	FString CachedImagePath(const FString& id, TEnumAsByte<ECardSide::Type> CardSide);
 
 	void LoadCardFromCache(const FString& id);
+	void LoadCardImageFromCache(const FString& id, TEnumAsByte<ECardSide::Type> CardSide);
+	UTexture2D* LoadTextureFromFile(const FString& FullFilePath, EImageFormat ImageFormat);
 
 	bool SaveCardToCache(const FString& id, const FString& jsonString);
 
-	bool GenerateFromJsonString(FString& id, FString& json);
+	bool GenerateFromJsonString(FString& json, FString& OutId);
 
-	bool LoadCardFromJson(FString& id, TSharedPtr<FJsonObject> JsonObject);
+	bool LoadCardFromJson(TSharedPtr<FJsonObject> JsonObject, FString& OutId);
 
 	FString LoadJsonFile(const FString& id);
+
+	TArray<TEnumAsByte<ECardColorFragment::Type>> ParseColorFragments(const TArray<TSharedPtr<FJsonValue>> colors);
 };

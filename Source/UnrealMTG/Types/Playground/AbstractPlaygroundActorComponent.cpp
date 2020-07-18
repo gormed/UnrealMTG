@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "AbstractPlaygroundActorComponent.h"
+
 #include "MTGBattlefieldActorComponent.h"
 #include "MTGCommadActorComponent.h"
 #include "MTGExileActorComponent.h"
@@ -8,8 +10,6 @@
 #include "MTGHandActorComponent.h"
 #include "MTGLibraryActorComponent.h"
 #include "MTGStackActorComponent.h"
-
-#include "AbstractPlaygroundActorComponent.h"
 
 // Sets default values for this component's properties
 UAbstractPlaygroundActorComponent::UAbstractPlaygroundActorComponent()
