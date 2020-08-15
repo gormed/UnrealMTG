@@ -22,6 +22,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, Category = "MTG", meta = (DisplayName = "Init"))
+	bool Init(class APlayground* PlayerPlayground);
+
 	/// Library Component
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Library")
 	class UMTGLibraryActorComponent* Library;
@@ -49,4 +52,7 @@ public:
 	/// Battlefield Component
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Battlefield")
 	class UMTGBattlefieldActorComponent* Battlefield;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components|Playground")
+	class APlayground* Playground;
 };

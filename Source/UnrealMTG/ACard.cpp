@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "ACard.h"
 
 #include "Misc/Paths.h"
@@ -10,6 +9,7 @@
 #include "HighResScreenshot.h"
 #include "ImageUtils.h"
 #include "IImageWrapper.h"
+#include "GameFramework/Character.h"
 
 // Sets default values
 ACard::ACard()
@@ -365,9 +365,9 @@ void ACard::HTTPOnResponse_FetchCard(FHttpRequestPtr Request, FHttpResponsePtr R
 void ACard::SetTapped(const bool NewTapped)
 {
 	if (bTapped != NewTapped) {
-		// TODO: Broadcast tapped changed
+		bTapped = NewTapped;
+		OnCardTappedChanged.Broadcast(this, NewTapped);
 	}
-	bTapped = NewTapped;
 }
 
 bool ACard::FetchCardTexture(const FString& URL, const TEnumAsByte<ECardSide::Type> CardSide)

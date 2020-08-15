@@ -32,130 +32,136 @@ void UAbstractStackActorComponent::TickComponent(float DeltaTime, ELevelTick Tic
 	// ...
 }
 
-TSet<ACard*> UAbstractStackActorComponent::ViewCards(
-	AMTGPlayerCharacter* character,
-	int32 count = 1,
-	TEnumAsByte<EStackSide::Type> side = EStackSide::Type::Top)
-{
+TSet<ACard*> UAbstractStackActorComponent::ViewCards( 
+	AMTGPlayerCharacter* Character, 
+	bool& bSuccessful,
+	const int32 Count /* = 1 */,
+	const TEnumAsByte<EStackSide::Type> Side /* = EStackSide::Top */ 
+) {
 	TSet<ACard*> show;
-	// return false for a invalid character!
-	if (character == NULL)
+	bSuccessful = false;
+
+	if (Character == NULL)
 	{
 		UE_LOG(LogMTGAction, Error, TEXT("Invalid character, make sure it is not NULL (%s)!"), *GetName());
 		return show;
 	}	
-	if (count <= 0)
+	if (Count <= 0)
 	{
 		UE_LOG(LogMTGAction, Error, TEXT("Invalid count, must be greater 0 (%s)!"), *GetName());
 		return show;
 	}
-	if (OwningCharacter == character)
+	if (OwningCharacter == Character)
 	{
-		switch (side) {
-			case EStackSide::Type::Top:
-				for (auto It = Cards.CreateConstIterator(); It; ++It)
-				{
-					ACard* card = *It;
-					show.Emplace(card);
-				}
-				return show;
-			case EStackSide::Type::Bottom:
-				for (auto It = Cards.CreateConstIterator(); It; ++It)
-				{
-					ACard* card = *It;
-					show.Emplace(card);
-				}
-				return show;
-			default:
-				UE_LOG(LogMTGAction, Error, TEXT("Invalid stack side (%s)!"), *GetName());
-				return show;
+		switch (Side) {
+		default:
+		case EStackSide::Top:
+			for (auto It = Cards.CreateConstIterator(); It; ++It)
+			{
+				ACard* card = *It;
+				show.Emplace(card);
+			}
+			break;
+		case EStackSide::Bottom:
+			for (auto It = Cards.CreateConstIterator(); It; ++It)
+			{
+				ACard* card = *It;
+				show.Emplace(card);
+			}
+			break;
 		}
+		bSuccessful = true;
+		OnCardsViewed.Broadcast(Character, Count, Side, show);
 	}
 	return show;
 }
 
-TSet<ACard*> UAbstractStackActorComponent::DrawCards(
-	AMTGPlayerCharacter* character,
-	int32 count = 1,
-	TEnumAsByte<EStackSide::Type> side = EStackSide::Type::Top)
-{
+TSet<ACard*> UAbstractStackActorComponent::RemoveCards( 
+	AMTGPlayerCharacter* Character, 
+	bool& bSuccessful, 
+	const int32 Count /* = 1 */, 
+	const TEnumAsByte<EStackSide::Type> Side /* = EStackSide::Top */
+) {
 	TSet<ACard*> draw;
-	// return false for a invalid character!
-	if (character == NULL)
+	bSuccessful = false;
+
+	if (Character == NULL)
 	{
 		UE_LOG(LogMTGAction, Error, TEXT("Invalid character, make sure it is not NULL (%s)!"), *GetName());
 		return draw;
 	}
-	if (count <= 0)
+	if (Count <= 0)
 	{
 		UE_LOG(LogMTGAction, Error, TEXT("Invalid count, must be greater 0 (%s)!"), *GetName());
 		return draw;
 	}
-	if (OwningCharacter == character)
+	if (OwningCharacter == Character)
 	{
-		switch (side) {
-		case EStackSide::Type::Top:
-			for (auto It = Cards.CreateConstIterator(); It; ++It)
-			{
-				ACard* card = *It;
-				draw.Emplace(card);
-				Cards.Remove(card);
-			}
-			return draw;
-		case EStackSide::Type::Bottom:
-			for (auto It = Cards.CreateConstIterator(); It; ++It)
-			{
-				ACard* card = *It;
-				draw.Emplace(card);
-				Cards.Remove(card);
-			}
-			return draw;
+		switch (Side) {
 		default:
-			UE_LOG(LogMTGAction, Error, TEXT("Invalid stack side (%s)!"), *GetName());
-			return draw;
+		case EStackSide::Top:
+			for (auto It = Cards.CreateConstIterator(); It; ++It)
+			{
+				ACard* card = *It;
+				draw.Emplace(card);
+				Cards.Remove(card);
+			}
+			break;
+		case EStackSide::Bottom:
+			for (auto It = Cards.CreateConstIterator(); It; ++It)
+			{
+				ACard* card = *It;
+				draw.Emplace(card);
+				Cards.Remove(card);
+			}
+			break;
 		}
+		bSuccessful = true;
+		OnCardsRemoved.Broadcast(Character, Count, Side, draw);
 	}
 	return draw;
 }
 
-bool UAbstractStackActorComponent::PutCards(
-	UAbstractPlaygroundActorComponent* source,
-	const TSet<ACard*>& putCards,
-	TEnumAsByte<EStackSide::Type> side = EStackSide::Type::Top)
-{	
+void UAbstractStackActorComponent::PutCards( 
+	UAbstractPlaygroundActorComponent* Source, 
+	const TSet<ACard *>& PutCards, 
+	bool& bSuccessful,
+	const TEnumAsByte<EStackSide::Type> Side /* = EStackSide::Top */ 
+) {	
+	bSuccessful = false;
 	// return false for a invalid source!
-	if (source == NULL)
+	if (Source == NULL)
 	{
 		UE_LOG(LogMTGAction, Error, TEXT("Invalid source, make sure it is not NULL (%s)!"), *GetName());
-		return false;
+		return;
 	}
 	// return false for a invalid card!
-	if (putCards.Num() == 0)
+	if (PutCards.Num() == 0)
 	{
 		UE_LOG(LogMTGAction, Error, TEXT("Invalid card, make sure it is not NULL (%s)!"), *GetName());
-		return false;
+		return;
 	}
-	if (OwningCharacter == source->OwningCharacter)
+	if (OwningCharacter == Source->OwningCharacter)
 	{
-		switch (side) {
-		case EStackSide::Type::Top:
-			for (auto It = putCards.CreateConstIterator(); It; ++It)
-			{
-				ACard* card = *It;
-				Cards.Emplace(card);
-			}
-			return true;
-		case EStackSide::Type::Bottom:
-			for (auto It = putCards.CreateConstIterator(); It; ++It)
-			{
-				ACard* card = *It;
-				Cards.Emplace(card);
-			}
-			return true;
+		switch (Side) {
 		default:
-			UE_LOG(LogMTGAction, Error, TEXT("Invalid stack side (%s)!"), *GetName());
-			return false;
+		case EStackSide::Top:
+			for (auto It = PutCards.CreateConstIterator(); It; ++It)
+			{
+				ACard* card = *It;
+				Cards.Emplace(card);
+			}
+			break;
+		case EStackSide::Bottom:
+			for (auto It = PutCards.CreateConstIterator(); It; ++It)
+			{
+				ACard* card = *It;
+				Cards.Emplace(card);
+			}
+			break;
 		}
+		bSuccessful = true;
+		OnCardsPut.Broadcast(Source, PutCards, Side);
 	}
-	return false;
+	return;
 }

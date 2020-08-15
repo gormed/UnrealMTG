@@ -37,11 +37,4 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG")
 	TSet<ACard*> Cards;
-
-	UFUNCTION(BlueprintCallable, Category = "MTG|Action", meta = (DisplayName = "Move Cards"))
-	bool MoveCards(
-		UAbstractPlaygroundActorComponent* source,
-		TSet<ACard*> moveCards,
-		FMoveAction action
-	);
 };

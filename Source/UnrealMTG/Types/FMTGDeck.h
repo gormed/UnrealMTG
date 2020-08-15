@@ -15,9 +15,16 @@ struct FMTGDeck
 
 public:
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG Deck")
-	TMap<TSubclassOf<ACard>, FMTGDeckPlayset> CardMap;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "MTG Deck")
+	FString Name;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG Deck")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "MTG Deck")
+	TSet<FMTGDeckPlayset> CardMap;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "MTG Deck")
 	TEnumAsByte<EMTGDeck::Type> DeckType = EMTGDeck::Type::Standard;
+
+	FMTGDeck() {
+		Name = "Untitled";
+	}
 };

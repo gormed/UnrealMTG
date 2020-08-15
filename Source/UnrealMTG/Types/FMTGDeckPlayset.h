@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "FMTGDeckPlayset.generated.h"
 
 class ACard;
@@ -13,12 +12,17 @@ struct FMTGDeckPlayset
 
 public:
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG Deck")
-	TSubclassOf<ACard> CardClass;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "MTG Deck")
+	ACard* Representative;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG Deck")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "MTG Deck")
 	int32 Count;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG Deck")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "MTG Deck")
 	TSet<ACard*> Cards;
+
+	FMTGDeckPlayset() {
+		Representative = NULL;
+		Count = 0;
+	}
 };

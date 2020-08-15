@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UnrealMTG/UnrealMTG.h"
-
 #include "MTGSearchObject.h"
+
+#include "UnrealMTG/UnrealMTG.h"
 
 void UMTGSearchObject::SearchCard(const FString& Query, bool& bSuccessful, const int32 Page, const FString& Unique, const FString& Order, const FString& Direction)
 {

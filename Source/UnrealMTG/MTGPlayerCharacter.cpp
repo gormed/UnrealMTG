@@ -11,6 +11,8 @@
 #include "Types/Playground/MTGCommadActorComponent.h"
 #include "Types/Playground/MTGBattlefieldActorComponent.h"
 
+#include "UnrealMTG/Playground.h"
+
 // Sets default values
 AMTGPlayerCharacter::AMTGPlayerCharacter(const class FObjectInitializer& PCIP)
 	: Super(PCIP)
@@ -53,5 +55,12 @@ void AMTGPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+bool AMTGPlayerCharacter::Init(class APlayground* PlayerPlayground)
+{
+	Playground = PlayerPlayground;
+	Playground->OwningCharacter = this;
+	return true;
 }
 

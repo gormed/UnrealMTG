@@ -31,11 +31,3 @@ void UAbstractPlayActorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 
 	// ...
 }
-
-bool UAbstractPlayActorComponent::CastCards(
-	UAbstractPlaygroundActorComponent* source,
-	TSet<ACard*> castCards,
-	TEnumAsByte<ECardFace::Type> face
-) {
-	return false;
-}

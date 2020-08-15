@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbstractPlayActorComponent.h"
+#include "AbstractPlaygroundActorComponent.h"
 #include "Components/ActorComponent.h"
 #include "MTGBattlefieldActorComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class UNREALMTG_API UMTGBattlefieldActorComponent : public UAbstractPlayActorComponent
+class UNREALMTG_API UMTGBattlefieldActorComponent : public UAbstractPlaygroundActorComponent
 {
 	GENERATED_BODY()
 

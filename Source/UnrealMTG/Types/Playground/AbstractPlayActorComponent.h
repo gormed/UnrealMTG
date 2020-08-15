@@ -27,10 +27,4 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UFUNCTION(BlueprintCallable, Category = "MTG|Action", meta = (DisplayName = "Cast Cards"))
-	bool CastCards(
-		UAbstractPlaygroundActorComponent* source,
-		TSet<ACard*> castCards,
-		TEnumAsByte<ECardFace::Type> face
-	);
 };

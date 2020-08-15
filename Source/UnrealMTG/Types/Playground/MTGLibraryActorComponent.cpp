@@ -2,6 +2,8 @@
 
 #include "MTGLibraryActorComponent.h"
 
+#include "UnrealMTG/ACard.h"
+
 // Sets default values for this component's properties
 UMTGLibraryActorComponent::UMTGLibraryActorComponent()
 {
@@ -29,5 +31,14 @@ void UMTGLibraryActorComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+bool UMTGLibraryActorComponent::Init(TSet<ACard*> Deck)
+{
+	for (auto Card : Deck) {
+		Card->OwningCharacter = OwningCharacter;
+	}
+	Cards.Append(Deck);
+	return true;
 }
 

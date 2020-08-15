@@ -24,8 +24,11 @@
 
 #include "ACard.generated.h"
 
+class UAbstractPlaygroundActorComponent;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCardIntitialized);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCardTextureFetched, TEnumAsByte<ECardSide::Type>, CardSide, UTexture2D*, Texture);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCardTappedChanged, ACard*, Card, bool, Tapped);
 
 UCLASS()
 class UNREALMTG_API ACard : public AActor
@@ -45,10 +48,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	/// Initializes a card from URI (Can be overridden by Blueprint!)
-	UFUNCTION(BlueprintCallable, Category = "Card", meta = (DisplayName = "Init Card"))
+	UFUNCTION(BlueprintCallable, Category = "MTG|Card", meta = (DisplayName = "Init Card"))
 	void InitCard(const FString& CardId);
 
-	UPROPERTY(BlueprintAssignable, Category = "Card")
+	UPROPERTY(BlueprintAssignable, Category = "MTG|Card")
 	FCardIntitialized OnCardIntialized;
 
 	/// Implement this event in Blueprints
@@ -56,103 +59,108 @@ public:
 	// void CardDataReceived(const FString& JSON);
 
 	/// Scryfall object: 'card'
-	UPROPERTY(BlueprintReadOnly, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, Category = "MTG|Card")
 	TEnumAsByte<ECardObjectType::Type> ObjectType;
 
 	/// Printed Language
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	FString Language;
 
 	/// Scryfall id
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	FString Id;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	FString Name;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	TEnumAsByte<ECardLayoutType::Type> Layout;
 
 	/// Mana costs struct
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	FCardManaCost ManaCost;
 
 	/// Converted Mana Costs
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	int32 CMC;
 
 	/// The cards colors
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	TArray<TEnumAsByte<ECardColorFragment::Type>> CardColors;
 
 	/// The cards color identity
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	TArray<TEnumAsByte<ECardColorFragment::Type>> ColorIdentity;
 
 	/// The card type as a struct
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	FCardTypeDef Type;
 	
 	/// The cards tap state
-	UPROPERTY(BlueprintReadOnly, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, Category = "MTG|Card")
 	TEnumAsByte<ECardTapState::Type> TapState;
 
 	/// The cards ability keywords
-	UPROPERTY(BlueprintReadOnly, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, Category = "MTG|Card")
 	TArray<TEnumAsByte<EAbilityKeyword::Type>> AbilityKeywords;
 
 	/// The cards action keywords
-	UPROPERTY(BlueprintReadOnly, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, Category = "MTG|Card")
 	TArray<TEnumAsByte<EActionKeyword::Type>> ActionKeywords;
 
 	/// The cards parts if any
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	TArray<FCardPart> Parts;
 
 	/// The cards faces if any
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	TArray<FCardFace> Faces;
 
 	/// The card text if any
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	FString OracleText;
 
 	/// The cards power if it is a creature
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	int32 Power;
 
 	/// The cards toughness if it is a creature
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	int32 Toughness;
 
 	/// The cards counters if any
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
 	TArray<FCardCounter> Counter;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Card")
-	ACharacter* OwningPlayer;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
+	class AMTGPlayerCharacter* OwningCharacter;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "MTG|Card")
+	UAbstractPlaygroundActorComponent* CurrentZone;
 
 	/// Indicate the tapped state
-	UPROPERTY(BlueprintReadOnly, Category = "Card")
+	UPROPERTY(BlueprintReadOnly, Category = "MTG|Card")
 	bool bTapped;
 
-	UFUNCTION(BlueprintCallable, Category = "Card", meta = (DisplayName = "Tap / Untap"))
+	UFUNCTION(BlueprintCallable, Category = "MTG|Card", meta = (DisplayName = "Tap / Untap"))
 	void SetTapped(const bool NewTapped);
 
-	UFUNCTION(BlueprintCallable, Category = "Card", meta = (DisplayName = "Fetch Card Image"))
+	UPROPERTY(BlueprintAssignable, Category = "MTG|Card")
+	FCardTappedChanged OnCardTappedChanged;
+
+	UFUNCTION(BlueprintCallable, Category = "MTG|Card", meta = (DisplayName = "Fetch Card Image"))
 	bool FetchCardTexture(const FString& URL, const TEnumAsByte<ECardSide::Type> CardSide);
 
-	UPROPERTY(BlueprintAssignable, Category = "Card")
+	UPROPERTY(BlueprintAssignable, Category = "MTG|Card")
 	FCardTextureFetched OnCardTextureFetched;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Card")
+	UPROPERTY(BlueprintReadWrite, Category = "MTG|Card")
 	UTexture2D* FrontSideTexture;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Card")
+	UPROPERTY(BlueprintReadWrite, Category = "MTG|Card")
 	UTexture2D* BackSideTexture;
 
 private:
-
 
 	TArray<FString> CardCache;
 

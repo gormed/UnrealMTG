@@ -8,6 +8,7 @@
 #include "MTGStackActorComponent.generated.h"
 
 class ACard;
+class AMTGPlayerCharacter;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALMTG_API UMTGStackActorComponent : public UAbstractPlaygroundActorComponent
@@ -26,10 +27,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UFUNCTION(BlueprintCallable, Category = "MTG|Action", meta = (DisplayName = "Cast Cards"))
-	bool CastCards(
-		UAbstractPlaygroundActorComponent* source,
-		TSet<ACard*> castCards,
-		TEnumAsByte<ECardFace::Type> face
+	UFUNCTION(BlueprintCallable, Category = "MTG|Action", meta = (DisplayName = "Cast Card"))
+	bool CastCard(
+		AMTGPlayerCharacter* Character,
+		ACard* Card
 	);
 };

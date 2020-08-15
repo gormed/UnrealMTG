@@ -32,10 +32,7 @@ void UMTGStackActorComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	// ...
 }
 
-bool UMTGStackActorComponent::CastCards(
-	UAbstractPlaygroundActorComponent* source,
-	TSet<ACard*> castCards,
-	TEnumAsByte<ECardFace::Type> face
-) {
-	return false;
+bool UMTGStackActorComponent::CastCard(AMTGPlayerCharacter* Character, ACard* Card)
+{
+	return true;
 }
